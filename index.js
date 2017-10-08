@@ -64,9 +64,9 @@ glob(`${imageDir}/*`, null, function (err, files) {
 
     let data = {
         userId: serverConfig.userId,
-        name: categoryData.name && 'client upload image',
-        inShort: categoryData.inShort && 'just a test',
-        describe: categoryData.describe && 'describe, just a test',
+        name: categoryData.name || 'client upload image',
+        inShort: categoryData.inShort || 'just a test',
+        describe: categoryData.describe || 'describe, just a test',
         coverImg,
         symbolImgs
     };
@@ -82,8 +82,10 @@ glob(`${imageDir}/*`, null, function (err, files) {
     })
     socket.on('addCategoryImages_ret', (data) => {
         if (data.error) {
-            console.log('addCategoryImages_ret: ', data);
+            console.log('addCategoryImages return error ', data)
+            return;
         } 
+        console.log('addCategoryImages return ', sendNum, data)
         const fileToSend = getFile();
         if(fileToSend) {
             sendImage(fileToSend);
@@ -116,6 +118,7 @@ function sendImage(opt) {
     };
     ss(socket).emit('addCategoryImages', stream, data);
     fs.createReadStream(filePath).pipe(stream);
+    console.log('addCategoryImages emit, ', sendNum, data.uuid);
 }
 function getFile() {
     if (sendNum === fileQueue.length) {
