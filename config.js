@@ -1,12 +1,12 @@
 // upload config 
-exports.imageDir = '/media/anzi/虚拟机/图片/阳山峰林'; 
+exports.imageDir = '/media/anzi/虚拟机/图片/金子'; 
 
 exports.categoryData = {
-    name: '从化隐秘村庄游玩',
-    inShort: '山里的村庄，一种新的体验',
-    describe: '村庄有历史感',
-    coverImg: 'IMG_2291.JPG',
-    symbolImgs: ['IMG_2248.JPG','IMG_2276.JPG', 'IMG_2339.JPG'] 
+    name: '连州市金子山游玩',
+    inShort: '遇到一群好玩的人',
+    describe: '有点像武功山',
+    coverImg: 'IMG_2840.JPG',
+    symbolImgs: ['IMG_2695.JPG', 'IMG_2761.JPG', 'IMG_2772.JPG'] 
 };
 
 // 客户端的配置

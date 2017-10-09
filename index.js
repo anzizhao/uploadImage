@@ -21,6 +21,7 @@ let sendNum = 0;
 let coverImg = null;
 let symbolImgs = null;
 
+const startTime = Date.now();
 // options is optional
 glob(`${imageDir}/*`, null, function (err, files) {
     if (err) {
@@ -92,6 +93,10 @@ glob(`${imageDir}/*`, null, function (err, files) {
         } else {
             socket.emit('pictureAdd_end');
             console.log('pictureAdd_end');
+            const endTime = Date.now();
+            console.log(`upload images take times: ${(endTime-startTime)/ 1000}s`);
+            // 关闭链接
+            socket.close();
         }
     })
 
