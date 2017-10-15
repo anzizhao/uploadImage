@@ -1,30 +1,30 @@
 // upload config 
 exports.mode = 'mod'; // 'add' or 'mod'
-exports.imageDir = '/media/anzi/虚拟机/图片/惠州'; 
+exports.imageDir = './test'; 
 // 客户端的配置
-exports.serverConfig = {
-    host: 'http://www.anzizhao.com',
-    userId: '5718487a86d9aa500fc696e5'
-};
+//exports.serverConfig = {
+    //host: 'http://www.anzizhao.com',
+    //userId: '5718487a86d9aa500fc696e5'
+//};
+// for test
+ exports.serverConfig = {
+     host: 'http://localhost:3001',
+     userId: '5750cbc575a3ef200a96cb16'
+ };
 
 // use just in add mode
 exports.categoryData = {
-    name: '部门组织惠东游玩',
-    inShort: '一次难得的经历',
-    describe: '不知不觉，跟自媒体经历了这么多事情',
-    coverImg: 'IMG_2576.JPG',
+    name: 'test',
+    inShort: 'test in short',
+    describe: 'test describe',
+    coverImg: 'test3.jpg',
     symbolImgs: [
-        'IMG_2536.JPG', 
-        'IMG_2559.JPG', 
-        'IMG_2592.JPG'
+        'test.jpg', 
+        'test2.jpg', 
+        'test3.jpg'
     ] 
 };
 // use just in mod mode
-exports.categoryId = '';
+exports.categoryId = '59e2d2c4db37ea1b8875bfc3';
 
 
-// for test
-// exports.serverConfig = {
-//     host: 'http://localhost:3001',
-//     userId: '5750cbc575a3ef200a96cb16'
-// };

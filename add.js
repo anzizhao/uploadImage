@@ -12,7 +12,7 @@ const path = require('path');
 const sizeOf = require('image-size');
 const glob = require('glob');
 
-export function add() {
+exports.add = () => {
     let socket = '';
     // 目录的id
     let categoryId = '';
@@ -28,6 +28,9 @@ export function add() {
         if (err) {
             console.log(imageDir, ' directory read error, ', err);
             return;
+        }
+        if (!files.length) {
+            console.error(`${imageDir} directory is empty`);
         }
         fileQueue = files.map(item => {
             // 生成对应的uuid
@@ -54,8 +57,8 @@ export function add() {
                 }
             }).filter(item => !!item.uuid ); 
         }
-        console.log(coverImg)
-        console.log(symbolImgs)
+        console.log('coverImg: ', coverImg)
+        console.log('symbolImgs: ', symbolImgs)
         console.log('files number: ', fileQueue.length)
         socket = io.connect(serverConfig.host);
 

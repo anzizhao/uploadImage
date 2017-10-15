@@ -1,4 +1,8 @@
 const config = require('./config');
+const { 
+    serverConfig, 
+    imageDir
+} = config;
 const io = require('socket.io-client');
 const ss = require('socket.io-stream');
 const fs = require('fs');
@@ -7,7 +11,7 @@ const path = require('path');
 const sizeOf = require('image-size');
 const glob = require('glob');
 
-export function mod() {
+exports.mod = () => {
     let socket = '';
     // 目录的id
     let categoryId = config.categoryId;
@@ -34,16 +38,12 @@ export function mod() {
         console.log('files number: ', fileQueue.length)
         socket = io.connect(serverConfig.host);
 
+        const fileToSend = getFile();
+        if(!fileToSend) {
+            // 如果没有图片需要发送，返回退出
+            return;
+        } 
         socket.emit('pictureMod_start');
-
-        let data = {
-            userId: serverConfig.userId,
-            name: categoryData.name || 'client upload image',
-            inShort: categoryData.inShort || 'just a test',
-            describe: categoryData.describe || 'describe, just a test',
-            coverImg,
-            symbolImgs
-        };
         socket.on('addCategoryImages_ret', (data) => {
             if (data.error) {
                 console.log('addCategoryImages return error ', data)
@@ -63,10 +63,10 @@ export function mod() {
                 socket.close();
             }
         })
-
         socket.on('disconnect', () => {
             console.log('disconnect, ', Date.now());
         });
+        sendImage(fileToSend);
     })
 
     function sendImage(opt) {
