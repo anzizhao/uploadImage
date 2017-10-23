@@ -8,6 +8,8 @@ const infoFile = config.serverConfig.infoFile;
 if (fs.existsSync(infoFile)) {
   // 文件存在，走续传逻辑
   const resumeConf = require(infoFile);
+  // 读取日志文件，得到上传文件
+  // TODO 交叉得到未上传文件
   return resume(resumeConf);
 } 
 
