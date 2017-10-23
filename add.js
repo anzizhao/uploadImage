@@ -12,12 +12,18 @@ const path = require('path');
 const sizeOf = require('image-size');
 const glob = require('glob');
 
+const infoFile = serverConfig.infoFile;
+const runData = serverConfig.runData;
+
 exports.add = () => {
     let socket = '';
     // 目录的id
     let categoryId = '';
+    // 用户的id
+    let userId = serverConfig.userId;
     // 准备发送的文件队列
     let fileQueue = [];
+    let filePath = '';
     let sendNum = 0;
     let coverImg = null;
     let symbolImgs = null;
@@ -31,7 +37,17 @@ exports.add = () => {
         }
         if (!files.length) {
             console.error(`${imageDir} directory is empty`);
+            return;
         }
+        // 记录info.json 文件
+        const info = {
+            categoryId,
+            userId,
+            files: files
+        };
+        const ws = fs.createWriteStream(infoFile);
+        ws.write(JSON.stringify(info, null, 4));
+        ws.end();
         fileQueue = files.map(item => {
             // 生成对应的uuid
             return {
@@ -88,6 +104,11 @@ exports.add = () => {
                 return;
             } 
             console.log('addCategoryImages return ', sendNum, data)
+            fs.appendFile(runData, filePath + '\n', function(error) {
+                if (error){
+                    console.log('error: ', error);
+                }
+            });
             const fileToSend = getFile();
             if(fileToSend) {
                 sendImage(fileToSend);
@@ -99,6 +120,8 @@ exports.add = () => {
                 console.log(Date.now());
                 // 关闭链接
                 socket.close();
+                // 上传成功，上传log的内容
+                clearLog();
             }
         })
 
@@ -108,7 +131,7 @@ exports.add = () => {
     })
 
     function sendImage(opt) {
-        const filePath = opt.filePath;
+        filePath = opt.filePath;
         if (!filePath) {
             console.log('error, no file in the queue');
             return;
@@ -133,4 +156,13 @@ exports.add = () => {
         }
         return fileQueue[sendNum++];
     }
+    function clearLog() {
+        const files = fs.readdirSync(serverConfig.logDir);
+        files.forEach(function(file, index){
+            const curPath = serverConfig.logDir + "/" + file;
+            fs.unlinkSync(curPath);
+        });
+    }
 };
+
+

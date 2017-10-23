@@ -1,15 +1,21 @@
 // upload config 
-exports.mode = 'mod'; // 'add' or 'mod'
-exports.imageDir = './test'; 
+exports.mode = 'add'; // 'add' or 'mod'
+exports.imageDir = '/home/anzi/Picture'; 
 // 客户端的配置
 //exports.serverConfig = {
     //host: 'http://www.anzizhao.com',
     //userId: '5718487a86d9aa500fc696e5'
+     // logDir: './log',
+     // infoFile: './log/info.json',
+     // runData: './log/run.data'
 //};
 // for test
  exports.serverConfig = {
      host: 'http://localhost:3001',
-     userId: '5750cbc575a3ef200a96cb16'
+     userId: '5750cbc575a3ef200a96cb16',
+     logDir: './log',
+     infoFile: './log/info.json',
+     runData: './log/run.data'
  };
 
 // use just in add mode

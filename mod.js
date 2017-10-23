@@ -1,8 +1,7 @@
 const config = require('./config');
 const { 
     serverConfig, 
-    imageDir,
-    infoFile
+    imageDir
 } = config;
 const io = require('socket.io-client');
 const ss = require('socket.io-stream');
@@ -12,7 +11,8 @@ const path = require('path');
 const sizeOf = require('image-size');
 const glob = require('glob');
 
-
+const infoFile = serverConfig.infoFile;
+const runData = serverConfig.runData;
 let socket = '';
 // 目录的id
 let categoryId = config.categoryId;
@@ -20,6 +20,7 @@ let categoryId = config.categoryId;
 let userId = serverConfig.userId;
 // 准备发送的文件队列
 let fileQueue = [];
+let filePath = '';
 let sendNum = 0;
 let coverImg = null;
 let symbolImgs = null;
@@ -42,13 +43,13 @@ exports.mod = () => {
         const ws = fs.createWriteStream(infoFile);
         ws.write(JSON.stringify(info, null, 4));
         ws.end();
-        handleFile(config.files);
+        handleFiles(config.files);
     })
 };
 exports.resume = (config) => {
     categoryId = config.categoryId;
     userId = config.userId;
-    handleFile(config.files);
+    handleFiles(config.files);
 };
 // options is optional
 function handleFiles(files) {
@@ -74,6 +75,7 @@ function handleFiles(files) {
             return;
         } 
         console.log('addCategoryImages return ', sendNum, data)
+        fs.appendFile(runData, filePath + '\n');
         const fileToSend = getFile();
         if(fileToSend) {
             sendImage(fileToSend);
@@ -85,6 +87,8 @@ function handleFiles(files) {
             console.log(Date.now());
             // 关闭链接
             socket.close();
+            // 上传成功，上传log的内容
+            clearLog();
         }
     })
     socket.on('disconnect', () => {
@@ -94,7 +98,7 @@ function handleFiles(files) {
 }
 
 function sendImage(opt) {
-    const filePath = opt.filePath;
+    filePath = opt.filePath;
     if (!filePath) {
         console.log('error, no file in the queue');
         return;
@@ -118,4 +122,11 @@ function getFile() {
         return;
     }
     return fileQueue[sendNum++];
+}
+function clearLog() {
+    const files = fs.readdirSync(serverConfig.logDir);
+    files.forEach(function(file, index){
+        const curPath = serverConfig.logDir + "/" + file;
+        fs.unlinkSync(curPath);
+    });
 }
