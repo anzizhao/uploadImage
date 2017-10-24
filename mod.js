@@ -46,10 +46,10 @@ exports.mod = () => {
         handleFiles(config.files);
     })
 };
-exports.resume = (config) => {
+exports.resume = (config, files) => {
     categoryId = config.categoryId;
     userId = config.userId;
-    handleFiles(config.files);
+    handleFiles(files);
 };
 // options is optional
 function handleFiles(files) {
